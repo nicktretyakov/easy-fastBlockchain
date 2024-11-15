@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package blockchain;
+
+service BlockchainService {
+  rpc AddBlock (AddBlockRequest) returns (AddBlockResponse);
+  rpc GetBlock (GetBlockRequest) returns (GetBlockResponse);
+  rpc GetBlockchain (Empty) returns (stream GetBlockResponse);
+}
+
+message Empty {}
+
+message AddBlockRequest {
+  string data = 1;
+}
+
+message AddBlockResponse {
+  string hash = 1;
+}
+
+message GetBlockRequest {
+  bytes hash = 1;
+}
+
+message GetBlockResponse {
+  int64 timestamp = 1;
+  string pre_block_hash = 2;
+  string hash = 3;
+  repeated Transaction transactions = 4;
+  int64 nonce = 5;
+  int64 height = 6;
+}
+
+message Transaction {
+  string id = 1;
+  string from = 2;
+  string to = 3;
+  int64 amount = 4;
+}

@@ -1,0 +1,35 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "proto:add-no-check": "for file in ./src/grpc-api/*.ts; do printf \"// @ts-nocheck\\n%s\" \"$(cat \"$file\")\" > \"$file\"; done",
+    "proto:generate": "protoc --proto_path=../grpc-backend/proto --ts_opt=no_namespace --ts_out=./src/grpc-api --ts_opt=namespaces=false --ts_opt=target=web  --ts_opt=unary_rpc_promise=true ../grpc-backend/proto/*.proto; npm run proto:add-no-check"
+  },
+  "dependencies": {
+    "google-protobuf": "^3.21.2",
+    "grpc-web": "^1.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@grpc/grpc-js": "^1.10.1",
+    "@types/google-protobuf": "^3.15.12",
+    "@types/react": "^18.2.56",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "protoc-gen-ts": "^0.8.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.4"
+  }
+}
