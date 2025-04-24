@@ -1,106 +1,166 @@
-Easy Fast Blockchain
-A simple and efficient blockchain implementation designed for educational and experimental purposes. This project aims to provide an easy-to-use and fast blockchain system that allows users to understand the core concepts of blockchain technology while offering optimized performance for basic operations.
+# Easy Fast Blockchain
 
-Table of Contents
+A simple and efficient blockchain implementation designed for educational and experimental purposes. This project consists of two main components:
 
-Features
-Installation
-Usage
-Contributing
-License
+- **gRPC Backend**: A Rust-based server that implements core blockchain functionalities using gRPC for communication.
+- **Web Client**: A React+TypeScript web application powered by Vite and gRPC-Web that allows interaction with the blockchain.
 
+---
 
-Features
+## Table of Contents
 
-Easy to set up and use: Minimal configuration required to get started.
-Fast block creation and transaction processing: Optimized for quick operations, making it ideal for learning and testing.
-Basic blockchain operations:
-Create and add new blocks to the chain.
-Add transactions to the blockchain.
-Verify the integrity and validity of the blockchain.
+1. [Features](#features)
+2. [Architecture](#architecture)
+3. [Prerequisites](#prerequisites)
+4. [Getting Started](#getting-started)
+   - [Clone the Repository](#clone-the-repository)
+   - [Setup gRPC Backend](#setup-grpc-backend)
+   - [Setup Web Client](#setup-web-client)
+5. [Usage](#usage)
+6. [Project Structure](#project-structure)
+7. [Contributing](#contributing)
+8. [License](#license)
 
+---
 
-Lightweight and beginner-friendly: Suitable for those new to blockchain technology.
+## Features
 
+- **Core Blockchain Operations**: Create and add new blocks, manage transactions, and verify chain integrity.
+- **UTXO Model & Wallets**: Supports unspent transaction outputs (UTXO) and wallet generation.
+- **Proof-of-Work**: Simple PoW algorithm for block validation.
+- **gRPC API**: High-performance Rust backend exposing gRPC endpoints (`AddBlock`, `GetBlock`, `GetBlockchain`).
+- **Web Client**: React interface using gRPC-Web to interact with the blockchain in real-time.
+- **Lightweight & Educational**: Minimal setup with clear code to learn blockchain internals.
 
-Installation
-To get started with the Easy Fast Blockchain project, follow these steps:
+---
 
-Clone the repository:
+## Architecture
+
+```text
+┌─────────────────┐       gRPC       ┌──────────────────────┐
+│   Web Client    │ <--------------> │   Rust gRPC Backend  │
+│  (React + TS)   │                  │  (tonic + tokio)     │
+└─────────────────┘                  └──────────────────────┘
+```  
+
+- The **backend** listens on `localhost:50051`, compiles `.proto` definitions at build time, and serves blockchain services with CORS support via `tonic-web`.
+- The **client** generates TypeScript stubs from the same `.proto` file, runs on `localhost:5173` (Vite default), and communicates with the backend over gRPC-Web.
+
+---
+
+## Prerequisites
+
+- **Rust & Cargo** (version ≥ 1.60)
+- **Protobuf Compiler** (`protoc`)
+- **Node.js & npm** (version ≥ 14)
+
+---
+
+## Getting Started
+
+### Clone the Repository
+
+```bash
 git clone https://github.com/nicktretyakov/easy-fastBlockchain.git
-
-
-Navigate to the project directory:
 cd easy-fastBlockchain
+```
 
+### Setup gRPC Backend
 
-Install dependencies:
+1. Navigate into the backend folder:
 
-If the project uses Node.js:npm install
+   ```bash
+   cd grpc-backend
+   ```
 
+2. Install Rust dependencies and build the project (compiles `.proto` via `build.rs`):
 
-If the project uses Python:pip install -r requirements.txt
+   ```bash
+   cargo build --release
+   ```
 
+3. Run the gRPC server:
 
-(Note: Adjust the command based on the actual programming language and dependencies used in the project.)
+   ```bash
+   cargo run --release
+   ```
 
+   The server will start on **`[::1]:50051`**.
 
+### Setup Web Client
 
+1. In a new terminal, navigate to the client folder:
 
-Usage
-Once installed, you can interact with the blockchain using the following commands or API calls:
+   ```bash
+   cd client
+   ```
 
-Start the blockchain node:
+2. Install npm dependencies:
 
-For Node.js projects:node start.js
+   ```bash
+   npm install
+   ```
 
+3. Generate TypeScript bindings from the `.proto` definitions:
 
-For Python projects:python main.py
+   ```bash
+   npm run proto:generate
+   ```
 
+4. Start the development server:
 
-(Note: Replace with the actual command to start the node.)
+   ```bash
+   npm run dev
+   ```
 
+   The client will be available at **http://localhost:5173**.
 
-Create a new transaction:
+---
 
-Use the provided API endpoint or command-line tool to add a new transaction to the blockchain.
-Example (hypothetical):node cli.js add-transaction --from "sender" --to "receiver" --amount 100
+## Usage
 
+- **Add a Block**: Use the web interface to submit block data. The backend handles PoW and appends the block.
+- **View Blockchain**: Real-time stream of existing blocks is displayed in the client.
+- **Inspect a Block**: Query a block by its hash to view detailed properties (timestamp, nonce, transactions, etc.).
 
+Feel free to explore the TypeScript or Rust service calls under `src/services` and `src/grpc-api`.
 
+---
 
-Mine a new block:
+## Project Structure
 
-Trigger the mining process to add a new block to the chain.
-Example (hypothetical):node cli.js mine-block
+```text
+easy-fastBlockchain/
+├── client/             # React + TypeScript web client
+│   ├── public/         # Static assets
+│   ├── src/            # React components & gRPC-Web code
+│   ├── package.json
+│   └── vite.config.ts
+├── grpc-backend/       # Rust gRPC backend
+│   ├── proto/          # Protobuf definitions
+│   ├── src/            # Service implementations & core blockchain logic
+│   ├── build.rs        # Compile-time proto compiler
+│   └── Cargo.toml
+└── README.md           # Project overview (this file)
+```  
 
+---
 
+## Contributing
 
+Contributions are welcome! Please follow these steps:
 
-Check the blockchain validity:
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/my-feature`
+3. Make your changes and add tests.
+4. Commit and push: `git push origin feature/my-feature`
+5. Open a pull request with a clear description of your changes.
 
-Verify the integrity of the blockchain to ensure no tampering has occurred.
-Example (hypothetical):node cli.js validate-chain
+Please ensure your code follows existing style and includes documentation.
 
+---
 
+## License
 
-
-
-For more detailed usage instructions, refer to the documentation (if available) or explore the source code.
-
-Contributing
-Contributions are welcome! If you'd like to improve the project or add new features, please follow these steps:
-
-Fork the repository.
-Create a new branch for your feature or bugfix.
-Make your changes and ensure they are well-tested.
-Submit a pull request with a clear description of your changes.
-
-Please adhere to the coding standards and include tests for any new features or modifications.
-
-License
-This project is licensed under the MIT License (or specify the actual license if different). See the LICENSE file for more details.
-
-
-
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
